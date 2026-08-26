@@ -5,11 +5,16 @@ window.MARVIN_DESTINATIONS = [
   {
     name: "Home",
     shortName: "Home",
-    address: "REPLACE WITH HOME ADDRESS"
+    address: "27 N Riding Dr, Cherry Hill NJ 08003"
   },
   {
-    name: "Audiologist",
+    name: "Advocare Hearing Professionals of South Jersey",
     shortName: "Audiologist",
-    address: "REPLACE WITH AUDIOLOGIST ADDRESS"
-  }
+    address: "406 Lippincott Dr F, Marlton, NJ 08053"
+  },
+  {
+    namw: "Nick - Barber",
+    shortName: "Barber",
+    address: "3747 Church Rd Unit 1, Mt Laurel Township, NJ 08054"
+  }  
 ];
