@@ -4,22 +4,52 @@ function isConfigured(d) {
   return d.address && !d.address.startsWith("REPLACE");
 }
 
-// Uber officially supports pickup=my_location.
-// Destination is passed as a Location JSON object.
+function isHome(d) {
+  return d.shortName === "Home" || d.name === "Home";
+}
+
+function findHome() {
+  return (window.MARVIN_DESTINATIONS || []).find(isHome);
+}
+
+// Trips to Home start from wherever the rider is now. Trips to anywhere
+// else start from Home, since that's where Marvin leaves from.
+//
+// Uber officially supports pickup=my_location. A fixed pickup (or the
+// destination) is passed as a Location JSON object.
 function uberUrl(d) {
   const drop = {
     addressLine1: d.name,
     addressLine2: d.address
   };
-  return "https://m.uber.com/looking?pickup=my_location&drop[0]=" +
-    encodeURIComponent(JSON.stringify(drop));
+  const dropParam = "drop[0]=" + encodeURIComponent(JSON.stringify(drop));
+
+  const home = findHome();
+  if (isHome(d) || !isConfigured(home)) {
+    return "https://m.uber.com/looking?pickup=my_location&" + dropParam;
+  }
+
+  const pickup = {
+    addressLine1: home.name,
+    addressLine2: home.address
+  };
+  return "https://m.uber.com/looking?pickup=" +
+    encodeURIComponent(JSON.stringify(pickup)) + "&" + dropParam;
 }
 
-// Lyft ride deep link. Pickup is left to the rider's current location.
+// Lyft ride deep link. Pickup is the rider's current location for trips
+// home, or Home's address for every other trip.
 function lyftUrl(d) {
+  const destParam = "&destination[address]=" + encodeURIComponent(d.address);
+
+  const home = findHome();
+  if (isHome(d) || !isConfigured(home)) {
+    return "https://www.lyft.com/ride?id=lyft" +
+      "&pickup[latitude]=null&pickup[longitude]=null" + destParam;
+  }
+
   return "https://www.lyft.com/ride?id=lyft" +
-    "&pickup[latitude]=null&pickup[longitude]=null" +
-    "&destination[address]=" + encodeURIComponent(d.address);
+    "&pickup[address]=" + encodeURIComponent(home.address) + destParam;
 }
 
 function go(provider, d) {

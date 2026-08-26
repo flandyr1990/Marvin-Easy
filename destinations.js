@@ -13,7 +13,7 @@ window.MARVIN_DESTINATIONS = [
     address: "406 Lippincott Dr F, Marlton, NJ 08053"
   },
   {
-    namw: "Nick - Barber",
+    name: "Nick - Barber",
     shortName: "Barber",
     address: "3747 Church Rd Unit 1, Mt Laurel Township, NJ 08054"
   }  
